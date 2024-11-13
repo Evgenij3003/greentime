@@ -4499,12 +4499,6 @@
         const scrollWidth = window.innerWidth - document.querySelector(".wrapper").offsetWidth + "px";
         document.querySelector("body").style.setProperty("--scroll-width", scrollWidth);
         document.querySelector("[class*='__swiper-wrapper']:not(.swiper-wrapper)") ? buildSliders() : null;
-        if (document.querySelector(".main__video")) fetch("./../files/video/main.mp4").then((resp => resp.blob())).then((blob => {
-            let video = document.querySelector(".main__video video");
-            video.src = URL.createObjectURL(blob);
-            video.hidden = false;
-            video.play();
-        }));
         if (document.querySelector(".slider-solutions")) {
             const mediaQuery = "(max-width: 47.99875em)";
             const matchMedia = window.matchMedia(mediaQuery);
