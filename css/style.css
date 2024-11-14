@@ -705,7 +705,10 @@ span.error[hidden] {
   position: absolute;
   top: 100%; /* Только для первой вложенности. */
   left: 0; /* Только для первой вложенности. */
-  width: 13.125rem;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 18.75rem;
   background-color: transparent;
   visibility: hidden;
   pointer-events: none;
@@ -723,6 +726,7 @@ span.error[hidden] {
   .submenu {
     position: relative;
     width: 100%;
+    max-width: none;
     margin: 0.625rem auto;
     opacity: 1;
     visibility: visible;
@@ -2628,19 +2632,36 @@ body::-webkit-scrollbar-thumb {
 
 .selection {
   position: relative;
-  margin: 0 0 5.625rem 0;
+  max-width: 120rem;
+  margin: 0 auto 5.625rem;
 }
 @media (max-width: 47.99875em) {
   .selection {
     margin: 0 0 3.75rem 0;
   }
 }
-.selection::before {
+.selection::before, .selection::after {
   content: "";
   position: absolute;
+}
+.selection::before {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
+}
+.selection::after {
+  top: 0;
+  left: calc(50% - 60.625rem);
+  height: 100%;
+  width: 25.6875rem;
+  width: 38.1875rem;
+  background: -webkit-gradient(linear, left top, right top, from(#334A3D), to(#2D4337));
+  background: linear-gradient(90deg, #334A3D, #2D4337);
+  background: -webkit-gradient(linear, left top, right top, from(#3d3d3a), color-stop(75%, #2D4337), to(rgba(45, 67, 55, 0)));
+  background: linear-gradient(90deg, #3d3d3a, #2D4337 75%, rgba(45, 67, 55, 0) 100%);
+  -webkit-filter: blur(1rem);
+          filter: blur(1rem);
+  z-index: 2;
 }
 .selection__image {
   position: absolute;
@@ -2652,8 +2673,8 @@ body::-webkit-scrollbar-thumb {
 }
 .selection__image::before {
   inset: 0;
-  background: -webkit-gradient(linear, right top, left top, from(rgba(14, 174, 97, 0)), to(rgba(14, 174, 97, 0.6)));
-  background: linear-gradient(270deg, rgba(14, 174, 97, 0) 0%, rgba(14, 174, 97, 0.6) 100%);
+  background: -webkit-gradient(linear, right top, left top, from(rgba(14, 174, 97, 0)), to(rgba(14, 174, 97, 0.7)));
+  background: linear-gradient(270deg, rgba(14, 174, 97, 0) 0%, rgba(14, 174, 97, 0.7) 100%);
   z-index: 1;
 }
 .selection__image::after {
@@ -3206,10 +3227,12 @@ body::-webkit-scrollbar-thumb {
   }
 }
 .platform__map {
-  width: 100%;
+  max-width: 45rem;
+  margin: 0 auto;
 }
 @media (max-width: 47.99875em) {
   .platform__map {
+    max-width: none;
     width: calc(100% + 3.125rem);
     margin: 0 -1.5625rem;
   }
