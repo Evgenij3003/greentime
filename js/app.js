@@ -492,6 +492,12 @@
         const da = new dynamicAdapt("max");
         da.init();
     }
+    function initSimpleBar() {
+        new SimpleBar(document.getElementById("simplebar"), {
+            autoHide: false,
+            clickOnTrack: true
+        });
+    }
     let popup_lockStatus = false;
     class Popup {
         constructor(options) {
@@ -531,13 +537,36 @@
                 }));
                 popup.setAttribute("role", "dialog");
                 popup.setAttribute("aria-modal", "true");
-                popup.setAttribute("aria-hidden", "true");
                 popup.setAttribute("aria-labelledby", `${popupLabel}`);
             }));
             const popupOpenButtons = document.querySelectorAll("[data-popup-open]");
+            const formulaPopup = document.getElementById("formula-popup");
             if (popupOpenButtons) popupOpenButtons.forEach((popupButton => {
                 popupButton.addEventListener("click", function(e) {
                     !e.target.closest("[data-form]") ? e.preventDefault() : null;
+                    if (popupButton.getAttribute("data-formula-id")) {
+                        const formulaId = popupButton.getAttribute("data-formula-id");
+                        const formulaBlock = document.querySelector(`.spollers-formulas [data-formula-id="${formulaId}"]`);
+                        if (formulaBlock) {
+                            const popupInfoBody = formulaPopup.querySelector(".info-formula__body");
+                            popupInfoBody.innerHTML = "";
+                            let popupTitle = document.createElement("h2");
+                            popupTitle.className = "info-formula__title title";
+                            popupTitle.innerHTML = formulaBlock.getAttribute("data-formula");
+                            const formulaInfoLeft = formulaBlock.querySelector(".info-formula__top");
+                            const copyInfoLeft = formulaInfoLeft.cloneNode(true);
+                            copyInfoLeft.prepend(popupTitle);
+                            popupInfoBody.append(copyInfoLeft);
+                            let popupScrollBlock = document.createElement("div");
+                            popupScrollBlock.className = "info-formula__scroll-block";
+                            popupScrollBlock.id = "simplebar";
+                            const formulaContent = formulaBlock.querySelector(".info-formula__content");
+                            const copyFormulaContent = formulaContent.cloneNode(true);
+                            popupScrollBlock.append(copyFormulaContent);
+                            popupInfoBody.append(popupScrollBlock);
+                            initSimpleBar();
+                        }
+                    }
                     this.getOpenPopup(e.target);
                 }.bind(this));
             }));
@@ -559,7 +588,6 @@
                     this.closePopup();
                 }
                 this.popupOpen.classList.add("popup-open");
-                this.popupOpen.setAttribute("aria-hidden", "false");
                 this.previousOpenPopup = this.popupOpen;
                 !this.nextOpen ? toggleLockBody(this.bodyLock, this.fixedElements, this.options.delay) : null;
                 document.body.classList.add("open-popup");
@@ -598,7 +626,6 @@
         }
         closePopup() {
             this.previousOpenPopup.classList.remove("popup-open");
-            this.previousOpenPopup.setAttribute("aria-hidden", "true");
             !this.nextOpen ? toggleLockBody(this.bodyLock, this.fixedElements, this.options.delay) : null;
             document.body.classList.remove("open-popup");
             this.isOpen = false;
@@ -787,6 +814,14 @@
                 mediaValue: "1023.98",
                 typeMedia: "max",
                 speed: 350
+            });
+        }
+        if (document.querySelector("#spollers-formulas")) {
+            const spollersFormulas = document.querySelector("#spollers-formulas");
+            new Spollers(spollersFormulas, {
+                mediaValue: "767.98",
+                typeMedia: "max",
+                speed: 400
             });
         }
     }
@@ -4544,6 +4579,7 @@
     document.querySelector(".submenu") ? subMenu() : null;
     document.querySelector("[data-popup]") ? initPopup() : null;
     document.querySelector("[data-spollers]") ? initSpollers() : null;
+    document.querySelector("#simplebar") ? initSimpleBar() : null;
     document.querySelector("[data-tabs]") ? initTabs() : null;
     document.querySelector("[data-goto]") ? goTo() : null;
     window.addEventListener("scroll", (function() {}));
@@ -4552,9 +4588,7 @@
         document.querySelector("[aria-controls='menu']") ? onClickMenu(targetElement) : null;
         window.innerWidth > 1023.98 ? onClickOne(targetElement) : null;
     }));
-    window.addEventListener("beforeunload", (function() {
-        window.scrollTo(0, 0);
-    }));
+    window.addEventListener("beforeunload", (function() {}));
     window.addEventListener("load", (function(e) {}));
     window.addEventListener("DOMContentLoaded", (function() {
         const scrollWidth = window.innerWidth - document.querySelector(".wrapper").offsetWidth + "px";
